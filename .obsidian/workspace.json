@@ -11,10 +11,14 @@
             "id": "6e528d175d6ba359",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "ai/plans/demo-feature-plan.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "demo-feature-plan"
             }
           }
         ]
@@ -90,6 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "ai/plans/demo-feature-plan.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for demo-feature-plan"
             }
           },
           {
@@ -108,11 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "ai/plans/demo-feature-plan.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from demo-feature-plan"
             }
           },
           {
@@ -150,12 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "ai/plans/demo-feature-plan.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of demo-feature-plan"
             }
           }
         ]
@@ -178,17 +185,18 @@
   },
   "active": "6e528d175d6ba359",
   "lastOpenFiles": [
+    "codex-vault-0.2.1.tgz",
+    "ai/research/demo-feature-research.md",
+    "ai/backlog/demo-feature.md",
+    "docs/docs-overview.md",
     "ai/plans/demo-feature-plan.md",
     "ai/plans/demo-feature-tasks.md",
-    "ai/backlog/demo-feature.md",
-    "ai/research/demo-feature-research.md",
     "CHANGELOG.md",
     "ai/image/AGENTS",
     "ai/image",
     "ai/research/research-overview.md",
     "src/codex-orchestrator.mjs",
     "ai/AGENTS.md",
-    "docs/docs-overview.md",
     "ai/agents/agents-overview.md",
     "ai/runs/runs-overview.md",
     "ai/qa/qa-overview.md",

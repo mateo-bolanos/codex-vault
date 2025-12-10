@@ -16,10 +16,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline/promises";
+import { fileURLToPath } from "node:url";
 import { stdin as input, stdout as output } from "node:process";
 import { runImplPlanAgent, runResearchAgent } from "../src/codex-orchestrator.mjs";
 
-const VERSION = "0.1.0";
+const VERSION = "0.2.1";
 const DEFAULT_CODEX_VAULT_CONFIG = {
   autoDetectTasks: "off",
   taskCreationMode: "off"
@@ -577,7 +578,7 @@ function parseArgs(argv) {
 }
 
 function packageRootDir() {
-  const here = new URL(import.meta.url).pathname;
+  const here = fileURLToPath(import.meta.url);
   return path.resolve(path.dirname(here), "..");
 }
 
@@ -612,14 +613,23 @@ function cmdInit({ force }) {
   const pkgRoot = packageRootDir();
   const templateAi = path.join(pkgRoot, "ai");
 
-  if (!fs.existsSync(templateAi)) {
-    console.error("[codex-vault] Template ai/ directory not found in package.");
-    process.exitCode = 1;
+  if (fs.existsSync(templateAi)) {
+    copyDirRecursive(templateAi, targetAi);
+    console.log("[codex-vault] Initialized ai/ structure in", root);
     return;
   }
 
-  copyDirRecursive(templateAi, targetAi);
-  console.log("[codex-vault] Initialized ai/ structure in", root);
+  ensureDir(targetAi);
+  ensureDir(path.join(targetAi, "agents"));
+  ensureDir(path.join(targetAi, "backlog"));
+  ensureDir(path.join(targetAi, "research"));
+  ensureDir(path.join(targetAi, "plans"));
+  ensureDir(path.join(targetAi, "workflows"));
+  ensureDir(path.join(targetAi, "qa"));
+  ensureDir(path.join(targetAi, "runs"));
+  console.warn(
+    "[codex-vault] Template ai/ directory not found in package; created empty ai/ skeleton instead."
+  );
 }
 
 function cmdInfo() {
