@@ -13,7 +13,7 @@ The orchestrator will provide, when available:
 
 ## Output
 
-Produce a test plan note with this structure:
+Produce a test plan note with this structure (matching the shared frontmatter pattern and including related links):
 
 ```md
 ---
@@ -27,6 +27,10 @@ related_task: [[ai/backlog/{{TASK_SLUG}}]]
 related_plan: [[ai/plans/{{TASK_SLUG}}-plan]]
 related_workflows:
   - [[ai/workflows/{{WORKFLOW_SLUG}}]]
+tags:
+  - ai
+  - test-plan
+  - {{TASK_SLUG}}
 ---
 
 # 1. Test Strategy Overview
@@ -69,6 +73,12 @@ Performance, security, reliability.
 # 8. Gaps & Risks
 
 Where coverage is intentionally missing or challenging.
+
+# 9. Related Notes
+
+- [[ai/backlog/{{TASK_SLUG}}]]
+- [[ai/plans/{{TASK_SLUG}}-plan]]
+- [[ai/workflows/{{WORKFLOW_SLUG}}]]
 ```
 
 ## Style & constraints
@@ -76,4 +86,3 @@ Where coverage is intentionally missing or challenging.
 - Aim for pragmatic coverage; tie tests to specific files and behaviors.
 - Use checklists so implementers can see what remains.
 - The markdown test plan is the canonical source for what should be tested.
-

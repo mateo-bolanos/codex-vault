@@ -16,7 +16,7 @@ You cannot open new files yourself; rely only on the provided snippets.
 
 ## Output
 
-Produce one research note using this structure:
+Produce one research note using this structure (including a consistent frontmatter block and related-links section):
 
 ```md
 ---
@@ -27,6 +27,13 @@ owner_agent: research-subagent
 created: {{ISO_TIMESTAMP}}
 updated: {{ISO_TIMESTAMP}}
 related_task: [[ai/backlog/{{TASK_SLUG}}]]
+tags:
+  - ai
+  - research
+  - {{TASK_SLUG}}
+related_plan: [[ai/plans/{{TASK_SLUG}}-plan]]
+related_context: [[ai/plans/{{TASK_SLUG}}-context]]
+related_tasks_list: [[ai/plans/{{TASK_SLUG}}-tasks]]
 ---
 
 # 1. Task Overview
@@ -100,6 +107,13 @@ Bridge to the Implementation Plan subagent:
 - What should be done next?
 - Which files and layers are likely to change?
 - Any suggested refactors before implementing the feature?
+
+# 8. Related Notes
+
+- [[ai/backlog/{{TASK_SLUG}}]]
+- [[ai/plans/{{TASK_SLUG}}-plan]]
+- [[ai/plans/{{TASK_SLUG}}-context]]
+- [[ai/plans/{{TASK_SLUG}}-tasks]]
 ```
 
 ## Style & constraints
@@ -108,4 +122,3 @@ Bridge to the Implementation Plan subagent:
 - Link using Obsidian-style `[[relative/path]]` wiki links.
 - Never invent files or folders; only reference provided paths.
 - Do **not** modify code; this subagent only writes markdown.
-

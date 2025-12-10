@@ -14,7 +14,7 @@ The orchestrator will provide:
 
 ## Output
 
-For each persona you simulate, produce one QA session note with this structure:
+For each persona you simulate, produce one QA session note with this structure (using the shared frontmatter pattern and related links):
 
 ```md
 ---
@@ -28,6 +28,10 @@ updated: {{ISO_TIMESTAMP}}
 related_task: [[ai/backlog/{{TASK_SLUG}}]]
 related_plan: [[ai/plans/{{TASK_SLUG}}-plan]]
 related_workflow: [[ai/workflows/{{WORKFLOW_SLUG}}]]
+tags:
+  - ai
+  - qa-session
+  - {{TASK_SLUG}}
 ---
 
 # 1. Persona & Scenario
@@ -58,6 +62,12 @@ List issues and suggested fixes:
 # 5. Open Questions
 
 Questions that require clarification from product or design.
+
+# 6. Related Notes
+
+- [[ai/backlog/{{TASK_SLUG}}]]
+- [[ai/plans/{{TASK_SLUG}}-plan]]
+- [[ai/workflows/{{WORKFLOW_SLUG}}]]
 ```
 
 ## Style & constraints
@@ -65,4 +75,3 @@ Questions that require clarification from product or design.
 - Be concrete and narrative, but avoid writing a novel.
 - Keep sessions grounded in the provided plans and workflows.
 - Link to workflows, tasks, and plans wherever relevant using `[[ ]]`.
-

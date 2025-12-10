@@ -16,7 +16,7 @@ You will see these as labeled file snippets; you cannot open other files yoursel
 
 ## Outputs
 
-You conceptually produce three markdown notes under `ai/plans/`:
+You conceptually produce three markdown notes under `ai/plans/`, all sharing a consistent frontmatter pattern and related-links section:
 
 1. Implementation plan – `ai/plans/{{TASK_SLUG}}-plan.md`.
 2. Context digest – `ai/plans/{{TASK_SLUG}}-context.md`.
@@ -34,6 +34,12 @@ created: {{ISO_TIMESTAMP}}
 updated: {{ISO_TIMESTAMP}}
 related_task: [[ai/backlog/{{TASK_SLUG}}]]
 related_research: [[ai/research/{{TASK_SLUG}}-research]]
+tags:
+  - ai
+  - plan
+  - {{TASK_SLUG}}
+related_context: [[ai/plans/{{TASK_SLUG}}-context]]
+related_tasks_list: [[ai/plans/{{TASK_SLUG}}-tasks]]
 ---
 
 # 1. Summary
@@ -85,6 +91,13 @@ High-level plan for testing:
 - What kinds of tests (unit, integration, e2e) are needed?
 - Any fixtures or data required?
 - How QA should verify the change.
+
+# 6. Related Notes
+
+- [[ai/backlog/{{TASK_SLUG}}]]
+- [[ai/research/{{TASK_SLUG}}-research]]
+- [[ai/plans/{{TASK_SLUG}}-context]]
+- [[ai/plans/{{TASK_SLUG}}-tasks]]
 ```
 
 When asked to produce the **context digest**, use:
@@ -99,6 +112,12 @@ created: {{ISO_TIMESTAMP}}
 updated: {{ISO_TIMESTAMP}}
 related_task: [[ai/backlog/{{TASK_SLUG}}]]
 related_research: [[ai/research/{{TASK_SLUG}}-research]]
+tags:
+  - ai
+  - context
+  - {{TASK_SLUG}}
+related_plan: [[ai/plans/{{TASK_SLUG}}-plan]]
+related_tasks_list: [[ai/plans/{{TASK_SLUG}}-tasks]]
 ---
 
 # Context Digest
@@ -118,6 +137,12 @@ A 1–2 screen summary of the important context from the research doc.
 - [[ai/research/{{TASK_SLUG}}-research]]
 - [[ai/plans/{{TASK_SLUG}}-plan]]
 - [[ai/plans/{{TASK_SLUG}}-tasks]]
+
+# 6. Related Notes
+
+- [[ai/backlog/{{TASK_SLUG}}]]
+- [[ai/research/{{TASK_SLUG}}-research]]
+- [[ai/plans/{{TASK_SLUG}}-plan]]
 ```
 
 When asked to produce the **task checklist**, use:
@@ -131,6 +156,13 @@ owner_agent: impl-plan-subagent
 created: {{ISO_TIMESTAMP}}
 updated: {{ISO_TIMESTAMP}}
 related_task: [[ai/backlog/{{TASK_SLUG}}]]
+tags:
+  - ai
+  - tasks
+  - {{TASK_SLUG}}
+related_research: [[ai/research/{{TASK_SLUG}}-research]]
+related_plan: [[ai/plans/{{TASK_SLUG}}-plan]]
+related_context: [[ai/plans/{{TASK_SLUG}}-context]]
 ---
 
 # Implementation Task Checklist
@@ -155,6 +187,13 @@ Each task should be small enough to be done in a single focused Codex run or a s
 ## 4. Docs & QA
 
 - [ ] Task 5 – ...
+
+# 5. Related Notes
+
+- [[ai/backlog/{{TASK_SLUG}}]]
+- [[ai/research/{{TASK_SLUG}}-research]]
+- [[ai/plans/{{TASK_SLUG}}-plan]]
+- [[ai/plans/{{TASK_SLUG}}-context]]
 ```
 
 ## Style & constraints
@@ -162,4 +201,3 @@ Each task should be small enough to be done in a single focused Codex run or a s
 - Think in terms of **small, executable tasks**.
 - Avoid vague tasks like “implement feature”; be specific about files and behavior.
 - Keep documents short but precise, relying on links for deeper context.
-

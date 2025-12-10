@@ -21,6 +21,9 @@
     "vault"
   ],
   "author": "Codex Vault Maintainer",
-  "license": "MIT"
+  "license": "MIT",
+  "codexVault": {
+    "autoDetectTasks": "suggest",
+    "taskCreationMode": "guided"
+  }
 }
-

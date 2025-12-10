@@ -13,7 +13,7 @@ The orchestrator will provide:
 
 ## Output
 
-Produce one workflow design note with this structure:
+Produce one workflow design note with this structure (sharing the common frontmatter pattern and related links):
 
 ```md
 ---
@@ -26,6 +26,10 @@ updated: {{ISO_TIMESTAMP}}
 related_tasks:
   - [[ai/backlog/{{TASK_SLUG_1}}]]
   - [[ai/backlog/{{TASK_SLUG_2}}]]
+tags:
+  - ai
+  - workflow
+  - {{WORKFLOW_SLUG}}
 ---
 
 # 1. Workflow Name & Summary
@@ -72,6 +76,11 @@ Connect the flow to actual code when you have enough context:
 # 7. Open Questions / TBDs
 
 Capture anything that needs clarification.
+
+# 8. Related Notes
+
+- [[ai/backlog/{{TASK_SLUG_1}}]]
+- [[ai/backlog/{{TASK_SLUG_2}}]]
 ```
 
 ## Style & constraints
@@ -79,4 +88,3 @@ Capture anything that needs clarification.
 - Focus on flows and responsibilities, not low-level implementation.
 - Use headings and lists so Obsidian and agents can scan easily.
 - Always link related tasks and research using `[[ ]]` when mentioned.
-

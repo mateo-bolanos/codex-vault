@@ -1,7 +1,7 @@
 # AI Agents – Codex + Obsidian
 
 This repo is both a **codebase** and an **Obsidian vault**.
-All AI-related coordination lives under the `ai/` folder.
+All AI-related coordination lives under the `ai/` folder, and Obsidian’s graph view should show a clear flow from backlog → research → plans → workflows/tests/QA.
 
 ## Global rules
 
@@ -14,25 +14,20 @@ All AI-related coordination lives under the `ai/` folder.
 
 ## Folder map (AI-specific)
 
-- `ai/agents/` – Prompt templates for subagents (research, planning, tests, UX, etc.).
-- `ai/backlog/` – One markdown file per task.
-- `ai/research/` – Deep research documents about the codebase & domain.
-- `ai/plans/` – Implementation plans, context digests, task lists, and test plans.
-- `ai/workflows/` – End-to-end workflow descriptions.
-- `ai/qa/` – Persona-based QA / UX sessions.
-- `ai/runs/` – Optional execution logs created after large agent runs.
+- Start from `[[ai/ai-home]]` for the human-facing map of all AI notes (backlog → research → plans → workflows/tests/QA).
+- Prompt templates for subagents live under `ai/agents/` – see `[[ai/agents/agents-overview]]`.
 
 ## Subagents
 
 Each subagent has a dedicated prompt template in `ai/agents/`:
 
 - Core:
-  - `research.prompt.md` – Deep codebase + product research for a single task.
-  - `impl-plan.prompt.md` – Implementation plans & task breakdowns.
+  - [[ai/agents/research.prompt]] – Deep codebase + product research for a single task.
+  - [[ai/agents/impl-plan.prompt]] – Implementation plans & task breakdowns.
 - Optional:
-  - `test-writer.prompt.md` – Test strategy & coverage design.
-  - `user-qa.prompt.md` – Persona-based UX / QA sessions.
-  - `workflow-designer.prompt.md` – End-to-end workflow / user-flow design (advanced / niche).
+  - [[ai/agents/test-writer.prompt]] – Test strategy & coverage design.
+  - [[ai/agents/user-qa.prompt]] – Persona-based UX / QA sessions.
+  - [[ai/agents/workflow-designer.prompt]] – End-to-end workflow / user-flow design (advanced / niche).
 
 Codex or other orchestration code should:
 
@@ -45,8 +40,7 @@ Codex or other orchestration code should:
 
 ## Style conventions
 
-- Use YAML frontmatter with a `type:` field to classify notes:
-  - `ai-research`, `ai-impl-plan`, `ai-context-digest`, `ai-task-list`,
-    `ai-test-plan`, `ai-workflow`, `ai-qa-session`, etc.
+- Every AI note starts with YAML frontmatter following the shared pattern in [[ai/agents/_base.prompt]]:
+  - `type`, `task_slug`/`workflow_slug`, `status`, `owner_agent`, `created`, `updated`, `tags`, and related-note fields.
 - Use headings (`#`, `##`, `###`) and bullet lists for clarity.
 - When referencing other notes, always use `[[relative/path]]` without `.md`.

@@ -12,8 +12,9 @@ Core ideas:
 - A small Node CLI (`codex-vault`) helps you manage tasks and vault structure.
 
 Open this folder directly as an Obsidian vault, or install the npm package
-and use the CLI. Actual agent execution is expected to be handled by Codex or
-another orchestrator that reads the `.prompt.md` files and markdown notes.
+and use the CLI. Agent execution is handled by **Codex** – either via your IDE
+or via the built-in helpers that shell out to `codex exec` using the prompts
+in `ai/agents/`.
 
 ## Installation (Node / npm)
 
@@ -57,6 +58,12 @@ codex-vault task list
 
 # 3) See basic vault info
 codex-vault info
+
+# 4) Run research + implementation plan for a task (requires Codex CLI)
+codex-vault research inspections-checklist-ui
+codex-vault plan inspections-checklist-ui
+# or in one go:
+codex-vault pipeline inspections-checklist-ui
 ```
 
 This will:
@@ -72,14 +79,45 @@ All commands assume you run them from the vault root.
 ```bash
 codex-vault init [--force]
 codex-vault task create <slug> [--title TITLE] [--description DESC]
+codex-vault task create-from-text "<text>" [--mode MODE] [--slug SLUG] [--title TITLE]
+codex-vault task refine <slug>
+codex-vault task list
+codex-vault detect "<text>"
+codex-vault research <slug> [--description DESC]
+codex-vault plan <slug> [--description DESC]
+codex-vault pipeline <slug> [--description DESC]
 codex-vault task list
 codex-vault info
 ```
 
 - `init` – copy the `ai/` template (AGENTS + subagent prompts + folders) into the current repo.
 - `task create` – create a backlog note under `ai/backlog/`.
+- `task create-from-text` – derive a `task_slug` from free text and create a backlog note (mode controlled by `codexVault.taskCreationMode`).
+- `task refine` – normalize an existing backlog note into the structured template (Goal / Current / DoD / Constraints).
 - `task list` – list existing backlog tasks.
+- `detect` – heuristic “does this text look like a new task?” helper (behavior controlled by `codexVault.autoDetectTasks`).
+- `research` – run the Research subagent via `codex exec` and write `ai/research/<slug>-research.md`.
+- `plan` – run the Implementation Plan subagent via `codex exec` and write `ai/plans/<slug>-plan.md`.
+- `pipeline` – convenience: `research` followed by `plan` for a given `task_slug`.
 - `info` – print a quick summary of the expected vault layout.
+
+## Configuration (`codexVault` in package.json)
+
+The CLI reads optional configuration from your project’s `package.json`:
+
+```jsonc
+{
+  "codexVault": {
+    "autoDetectTasks": "suggest",
+    "taskCreationMode": "guided"
+  }
+}
+```
+
+- `autoDetectTasks`: `"off" | "suggest" | "auto"` – controls whether `codex-vault detect "<text>"` only prints a hint, prompts before creating a task, or auto-creates one.
+- `taskCreationMode`: `"off" | "guided" | "refine" | "planThis"` – controls how new tasks are created from free text (interactive Q&A, simple backlog note, or a structured note with “run research/plan” TODOs).
+
+This makes it easy to wire Codex Vault into your IDE or Codex CLI flows so that natural-language notes (e.g. commit messages, TODOs) can be turned into structured backlog tasks with minimal friction.
 
 ## Agent architecture
 
@@ -92,59 +130,31 @@ Agents are defined by markdown prompt templates under `ai/agents/`:
 - `test-writer.prompt.md` – Test Writer.
 - `user-qa.prompt.md` – User QA / UX.
 
-This repo does **not** call OpenAI directly. Instead:
+The Node CLI is deliberately small and focused on making the vault structure
+easy to work with from JS/Next.js and Codex.
 
-- Codex (or another orchestrator) should:
-  - Read `ai/AGENTS.md` and `ai/agents/*.prompt.md`.
-  - Choose a subagent (e.g. Research, Impl Plan).
-  - Provide relevant file snippets (backlog, PRDs, code) as context.
-  - Save the agent’s markdown output into the appropriate `ai/` folder.
+## Subagent orchestration via `codex exec`
 
-The Node CLI here is deliberately thin and focused on making the vault
-structure easy to work with from a JS/Next.js codebase.
+For convenience, this repo includes a thin orchestrator that shells out to the
+local `codex` CLI (see the Codex SDK docs). It:
 
-## Using with Codex / IDE flows (pseudo-code)
+- Reads `_base.prompt.md` plus the relevant subagent prompt (`research.prompt.md`, `impl-plan.prompt.md`).
+- Builds a single task string that includes:
+  - the combined prompt,
+  - the `task_slug` and description,
+  - labeled snippets from `ai/backlog/` and `ai/research/`.
+- Runs `codex exec --skip-git-repo-check "<task>"` in the current repo.
+- Writes the final agent message to:
+  - `ai/research/<slug>-research.md` for `research`,
+  - `ai/plans/<slug>-plan.md` for `plan`.
 
-Roughly, a Codex / Node flow for running the **Research** agent for a task slug
-would look like:
+This keeps the Codex integration on the Codex side (CLI + SDK) while giving you
+a repeatable way to run subagents from any repo that has been initialized with
+`codex-vault init`.
 
-```ts
-// 1) Read prompts and context
-const basePrompt = await fs.promises.readFile("ai/agents/_base.prompt.md", "utf8");
-const agentPrompt = await fs.promises.readFile("ai/agents/research.prompt.md", "utf8");
-const system = `${basePrompt}\n\n---\n\n${agentPrompt}`;
-
-const backlog = await fs.promises.readFile(`ai/backlog/${taskSlug}.md`, "utf8");
-
-// 2) Build a user message with snippets
-const user = `
-TASK_SLUG: ${taskSlug}
-
-TASK BACKLOG:
-[FILE: ai/backlog/${taskSlug}.md]
-"""
-${backlog}
-"""
-`;
-
-// 3) Call Codex / model (pseudo-API)
-const result = await codex.chat({
-  system,
-  user,
-  // ...model / options...
-});
-
-// 4) Save response into ai/research/
-await fs.promises.writeFile(
-  `ai/research/${taskSlug}-research.md`,
-  result.content.trim() + "\n",
-  "utf8"
-);
-```
-
-The same pattern applies for `impl-plan`, `test-writer`, etc.: load the
-corresponding `ai/agents/*.prompt.md`, feed the right snippets, then write the
-markdown into `ai/`.
+Your IDE or Codex SDK flows can still call the prompts directly for more
+advanced usage (e.g. running `test-writer` or `user-qa`), but the built-in
+commands are enough to demo the “main agent → subagent” pattern end to end.
 
 ## Repo layout
 
